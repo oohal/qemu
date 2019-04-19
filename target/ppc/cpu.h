@@ -1160,6 +1160,9 @@ struct CPUPPCState {
     /* Power management */
     int (*check_pow)(CPUPPCState *env);
 
+    /* darn instruction */
+    uint64_t (*read_darn)(CPUPPCState *env);
+
 #if !defined(CONFIG_USER_ONLY)
     void *load_info;    /* Holds boot loading state.  */
 #endif
