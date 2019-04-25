@@ -27,6 +27,7 @@
 #include "hw/ppc/pnv_occ.h"
 #include "hw/ppc/pnv_xive.h"
 #include "hw/ppc/pnv_core.h"
+#include "hw/ppc/pnv_virtio.h"
 #include "hw/pci-host/pnv_phb3.h"
 #include "hw/pci-host/pnv_phb4.h"
 
@@ -78,6 +79,7 @@ typedef struct Pnv8Chip {
     PnvLpcController lpc;
     Pnv8Psi      psi;
     PnvOCC       occ;
+    PnvVirtio    virtio;
 
 #define PNV8_CHIP_PHB3_MAX 4
     PnvPHB3      phbs[PNV8_CHIP_PHB3_MAX];
@@ -219,6 +221,8 @@ static inline PnvChip *pnv_get_chip(PnvMachineState *pnv, uint chip_id)
 void pnv_dt_bmc_sensors(IPMIBmc *bmc, void *fdt);
 void pnv_bmc_powerdown(IPMIBmc *bmc);
 int pnv_bmc_hiomap(IPMIBmc *bmc);
+
+void pnv_dt_virtio(void *fdt, PnvChip *chip);
 
 /*
  * POWER8 MMIO base addresses

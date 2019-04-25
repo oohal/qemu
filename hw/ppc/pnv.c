@@ -41,6 +41,7 @@
 #include "hw/ppc/xics.h"
 #include "hw/ppc/pnv_xscom.h"
 #include "hw/ppc/pnv_pnor.h"
+#include "hw/ppc/pnv_virtio.h"
 
 #include "hw/isa/isa.h"
 #include "hw/char/serial.h"
@@ -289,6 +290,8 @@ static void pnv_chip_power8_dt_populate(PnvChip *chip, void *fdt)
     if (chip->ram_size) {
         pnv_dt_memory(fdt, chip->chip_id, chip->ram_start, chip->ram_size);
     }
+
+    pnv_dt_virtio(fdt, chip);
 }
 
 static void pnv_chip_power9_dt_populate(PnvChip *chip, void *fdt)
@@ -857,6 +860,11 @@ static void pnv_chip_power8_instance_init(Object *obj)
                                 sizeof(chip8->phbs[i]), TYPE_PNV_PHB3,
                                 &error_abort, NULL);
     }
+
+    object_initialize_child(obj, "virtio",  &chip8->virtio, sizeof(chip8->virtio),
+                            TYPE_PNV_VIRTIO, &error_abort, NULL);
+    object_property_add_const_link(OBJECT(&chip8->virtio), "psi",
+                                   OBJECT(&chip8->psi), &error_abort);
 }
 
 static void pnv_chip_icp_realize(Pnv8Chip *chip8, Error **errp)
@@ -941,6 +949,12 @@ static void pnv_chip_power8_realize(DeviceState *dev, Error **errp)
         return;
     }
     pnv_xscom_add_subregion(chip, PNV_XSCOM_OCC_BASE, &chip8->occ.xscom_regs);
+
+    object_property_set_bool(OBJECT(&chip8->virtio), true, "realized", &local_err);
+    if (local_err) {
+        error_propagate(errp, local_err);
+        return;
+    }
 
     /* Create the PHB3 controllers */
     for (i = 0; i < pcc->num_phbs; i++) {
