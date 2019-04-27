@@ -120,7 +120,7 @@ static uint64_t virtio_mmio_read(void *opaque, hwaddr offset, unsigned size)
          */
         switch (offset) {
         case VIRTIO_MMIO_MAGIC_VALUE:
-            return VIRT_MAGIC;
+            return bswap32(VIRT_MAGIC);
         case VIRTIO_MMIO_VERSION:
             return VIRT_VERSION;
         case VIRTIO_MMIO_VENDOR_ID:
@@ -314,7 +314,7 @@ static void virtio_mmio_write(void *opaque, hwaddr offset, uint64_t value,
 static const MemoryRegionOps virtio_mem_ops = {
     .read = virtio_mmio_read,
     .write = virtio_mmio_write,
-    .endianness = DEVICE_NATIVE_ENDIAN,
+    .endianness = DEVICE_LITTLE_ENDIAN,
 };
 
 static void virtio_mmio_update_irq(DeviceState *opaque, uint16_t vector)
