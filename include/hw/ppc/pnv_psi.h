@@ -95,7 +95,7 @@ typedef enum PnvPsiIrq {
     PSIHB_IRQ_EXTERNAL,
 } PnvPsiIrq;
 
-#define PSI_NUM_INTERRUPTS 6
+#define PSI_NUM_INTERRUPTS 7
 
 void pnv_psi_irq_set(PnvPsi *psi, int irq, bool state);
 

@@ -469,15 +469,6 @@ static void pnv_psi_power8_instance_init(Object *obj)
                             TYPE_ICS_SIMPLE, &error_abort, NULL);
 }
 
-static const uint8_t irq_to_xivr[] = {
-    PSIHB_XSCOM_XIVR_FSP,
-    PSIHB_XSCOM_XIVR_OCC,
-    PSIHB_XSCOM_XIVR_FSI,
-    PSIHB_XSCOM_XIVR_LPCI2C,
-    PSIHB_XSCOM_XIVR_LOCERR,
-    PSIHB_XSCOM_XIVR_EXT,
-};
-
 static void pnv_psi_power8_realize(DeviceState *dev, Error **errp)
 {
     PnvPsi *psi = PNV_PSI(dev);
@@ -525,8 +516,8 @@ static void pnv_psi_power8_realize(DeviceState *dev, Error **errp)
     pnv_psi_set_bar(psi, psi->bar | PSIHB_BAR_EN);
 
     /* Default sources in XIVR */
-    for (i = 0; i < PSI_NUM_INTERRUPTS; i++) {
-        uint8_t xivr = irq_to_xivr[i];
+    for (i = 0; i < ARRAY_SIZE(xivr_regs); i++) {
+        uint8_t xivr = xivr_regs[i];
         psi->regs[xivr] = PSIHB_XIVR_PRIO_MSK |
             ((uint64_t) i << PSIHB_XIVR_SRC_SH);
     }
