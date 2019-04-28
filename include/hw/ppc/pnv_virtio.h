@@ -28,6 +28,7 @@ typedef struct PnvVirtio {
     DeviceState xd;
 
     PnvPsi *psi;
+    qemu_irq *irq;
 } PnvVirtio;
 
 #define PNV_VIRTIO_CLASS(klass) \
@@ -38,7 +39,7 @@ typedef struct PnvVirtio {
 typedef struct PnvVirtioClass {
     DeviceClass parent_class;
 
-    int psi_irq; // move out of the class?
+    int psi_irq_idx; // move out of the class?
 } PnvVirtioClass;
 
 #endif /* _PPC_PNV_VIRTIO_H */
